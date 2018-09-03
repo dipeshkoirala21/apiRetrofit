@@ -2,13 +2,13 @@ package com.example.dipes.retrofit;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,52 +25,70 @@ public class MainActivity extends AppCompatActivity {
 
         final ListView listView=findViewById(R.id.list_view);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        api Api= retrofit.create(api.class);
 
-        Call<ResponseBody> call= Api.getJson();
-//            Call<List<Json>> call=Api.getJsons();
+//        APIInterface Api= retrofit.create(APIInterface.class);
+        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<HistoryDetails>  calls = apiInterface.gethistorydetails("S10-1","2018-08-01");
+
+
+        calls.enqueue(new Callback<HistoryDetails>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                Log.d("response",response.toString());
-//                String Response=response.toString();
-                System.out.println(response +"");
+            public void onResponse(Call<HistoryDetails> call, Response<HistoryDetails> response) {
+
+
+                Log.d("TAG",response.code()+"");
+
+                String displayResponse = "";
 
 
 
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<HistoryDetails> call, Throwable t) {
+
             }
+
+
         });
-//  call.enqueue(new Callback<List<Json>>() {
+
+
+
+
+
+
+
+//        Call<ResponseBody> call= Api.getJson("S10-1","2018-08-01");
+//           Call<List<HistoryDetails>> call=Api.getJsons();
+
+//  call.enqueue(new Callback<List<HistoryDetails>>() {
 //      @Override
-//      public void onResponse(Call<List<Json>> call, Response<List<Json>> response) {
-//          System.out.println(response);
-//          List<Json> jsons=response.body();
+//      public void onResponse(Call<List<HistoryDetails>> call, Response<List<HistoryDetails>> response) {
+//          List<HistoryDetails> jsonList=response.body();
 //
-//          for (Json j:jsons){
+//          if (response.isSuccessful()) {
+//              System.out.println(" title: " + jsonList.get(0).getId());
+//
+//          } else {
+//          System.out.println(response.errorBody());
+//      }
+//
+//          for (HistoryDetails j:jsonList){
 ////              Log.d("userId",j.getUserId());
 ////              Log.d("id",j.getId());
 ////              Log.d("title",j.getTitle());
 ////              Log.d("body",j.getBody());
-//              String [] data = new String[jsons.size()];
-//              for(int i=0; i<jsons.size(); i++){
-//                  data[i]=jsons.get(i).getId();
-//                  data[i]=jsons.get(i).getName();
-//                  data[i]=jsons.get(i).getRoute_id();
-//                  data[i]=jsons.get(i).getStation_id();
-//                  data[i]=jsons.get(i).getStudent_id();
-//                  data[i]=jsons.get(i).getToken();
-//                  data[i]=jsons.get(i).getStudentCheckinCheckout();
+//              String [] data = new String[jsonList.size()];
+//              for(int i=0; i<jsonList.size(); i++){
+//                  data[i]=jsonList.get(i).getId();
+//                  data[i]=jsonList.get(i).getName();
+//                  data[i]=jsonList.get(i).getRoute_id();
+//                  data[i]=jsonList.get(i).getStation_id();
+//                  data[i]=jsonList.get(i).getStudent_id();
+//                  data[i]=jsonList.get(i).getToken();
+//                  data[i]=jsonList.get(i).getStudentCheckinCheckout();
 //
 //
 //              }
@@ -89,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //
 //      @Override
-//      public void onFailure(Call<List<Json>> call, Throwable t) {
+//      public void onFailure(Call<List<HistoryDetails>> call, Throwable t) {
 //            Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
 //      }
 //  });
